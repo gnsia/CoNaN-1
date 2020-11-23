@@ -26,93 +26,161 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   }
   return s.join(dec);
 }
+$(function() {
+     $('#upload-file-btn').click(function() {
 
+         var form_data = new FormData($('#upload-file')[0]);
+         $.ajax({
+             type: 'POST',
+             url: '/uploadajax',
+             data: form_data,
+             contentType: false,
+             cache: false,
+             processData: false,
+             async: false,
+             success: function(response) {
+                 alert('!')
+
+                 document.getElementById("logCount").innerText = response['count'];
+
+
+                 var data = response['data'];
+                 var data2 = response['data2'];
+                 // window.location.reload()
+
+                 var color1 = Math.floor(Math.random() * 256);
+                 var color2 = Math.floor(Math.random() * 256);
+                 var color3 = Math.floor(Math.random() * 256);
+
+                 var newlabel = data['x'];
+                 console.log(color1 + " " + color2 + " " + color3)
+                 var newDataset = {
+                    label: "Count",
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(78, 115, 223, 0.05)",
+                    borderColor: "rgba(78, 115, 223, 1)",
+                    pointRadius: 3,
+                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHoverRadius: 3,
+                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHitRadius: 10,
+                    pointBorderWidth: 2,
+                    data: data['y'],
+                 }
+
+                 // chart에 newDataset 푸쉬
+                 lineConfig.data.datasets.push(newDataset);
+                 // config.data.labels.pop();
+                 lineConfig.data.labels = newlabel;
+
+                 myLineChart.update();	//차트 업데이트
+
+                 var newlabel2 = data2['labels'];
+                 var newDataset2 = {
+                  data: data2['per'],
+                  backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'],
+                  hoverBackgroundColor: ['#858796', '#36b9cc', '#e74a3b', '#1cc88a', '#4e73df'],
+                  hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }
+
+                let temphtml = `<span class="mr-2">
+                                    <i class="fas fa-circle text-primary"></i> ${data2['labels'][0]}
+                                </span>
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-success"></i> ${data2['labels'][1]}
+                                </span>
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-danger"></i> ${data2['labels'][2]}
+                                </span>
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-info"></i> ${data2['labels'][3]}
+                                </span>
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-secondary"></i> ${data2['labels'][4]}
+                                </span>`
+                $('#pieTag').append(temphtml)
+                pieConfig.data.labels = newlabel2;
+                pieConfig.data.datasets.push(newDataset2);
+                myPieChart.update();
+             },
+         });
+     });
+});
 // Area Chart Example
 var ctx = document.getElementById("myAreaChart");
-var myLineChart = new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: ["jinjae", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-    datasets: [{
-      label: "Earnings",
-      lineTension: 0.3,
-      backgroundColor: "rgba(78, 115, 223, 0.05)",
-      borderColor: "rgba(78, 115, 223, 1)",
-      pointRadius: 3,
-      pointBackgroundColor: "rgba(78, 115, 223, 1)",
-      pointBorderColor: "rgba(78, 115, 223, 1)",
-      pointHoverRadius: 3,
-      pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-      pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-      pointHitRadius: 10,
-      pointBorderWidth: 2,
-      data: [1000000, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
-    }],
-  },
-  options: {
-    maintainAspectRatio: false,
-    layout: {
-      padding: {
-        left: 10,
-        right: 25,
-        top: 25,
-        bottom: 0
-      }
+var lineConfig = {
+    type: 'line',
+    data: {
+        labels: [0],
+        datasets: [],
     },
+    options: {
+        maintainAspectRatio: false,
+        layout: {
+            padding: {
+                left: 10,
+                right: 25,
+                top: 25,
+                bottom: 0
+            }
+        },
     scales: {
-      xAxes: [{
+        xAxes: [{
         time: {
-          unit: 'date'
+        unit: 'date'
         },
         gridLines: {
-          display: false,
-          drawBorder: false
+        display: false,
+        drawBorder: false
         },
         ticks: {
-          maxTicksLimit: 7
+        maxTicksLimit: 7
         }
-      }],
-      yAxes: [{
+        }],
+        yAxes: [{
         ticks: {
-          maxTicksLimit: 5,
-          padding: 10,
-          // Include a dollar sign in the ticks
-          callback: function(value, index, values) {
-            return '$' + number_format(value);
-          }
+        maxTicksLimit: 5,
+        padding: 10,
+        // Include a dollar sign in the ticks
+        // callback: function(value, index, values) {
+        // return '$' + number_format(value);
+        // }
         },
         gridLines: {
-          color: "rgb(234, 236, 244)",
-          zeroLineColor: "rgb(234, 236, 244)",
-          drawBorder: false,
-          borderDash: [2],
-          zeroLineBorderDash: [2]
+        color: "rgb(234, 236, 244)",
+        zeroLineColor: "rgb(234, 236, 244)",
+        drawBorder: false,
+        borderDash: [2],
+        zeroLineBorderDash: [2]
         }
-      }],
+        }],
     },
     legend: {
-      display: false
+    display: false
     },
     tooltips: {
-      backgroundColor: "rgb(255,255,255)",
-      bodyFontColor: "#858796",
-      titleMarginBottom: 10,
-      titleFontColor: '#6e707e',
-      titleFontSize: 14,
-      borderColor: '#dddfeb',
-      borderWidth: 1,
-      xPadding: 15,
-      yPadding: 15,
-      displayColors: false,
-      intersect: false,
-      mode: 'index',
-      caretPadding: 10,
-      callbacks: {
-        label: function(tooltipItem, chart) {
-          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-          return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
-        }
-      }
+    backgroundColor: "rgb(255,255,255)",
+    bodyFontColor: "#858796",
+    titleMarginBottom: 10,
+    titleFontColor: '#6e707e',
+    titleFontSize: 14,
+    borderColor: '#dddfeb',
+    borderWidth: 1,
+    xPadding: 15,
+    yPadding: 15,
+    displayColors: false,
+    intersect: false,
+    mode: 'index',
+    caretPadding: 10,
+    callbacks: {
+    label: function(tooltipItem, chart) {
+    var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+    return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
     }
-  }
-});
+    }
+    }
+    }
+    };
+var myLineChart = new Chart(ctx, lineConfig);

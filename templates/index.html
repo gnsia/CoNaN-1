@@ -21,29 +21,34 @@
     <link href="../static/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="../static/js/sb-admin-2.js" rel="script">
 
-    <<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
     <script>
-        $(document).ready(function() {
-            $("#uploadsubmit").click(function() {
 
-            // Create an FormData object
-            var data = new FormData($("#upload-file")[0]);
-
-            $.ajax({
-                type: "POST",
-                url: "/_uploadajax",
-                data: data,
-                processData: false,
-                contentType: false,
-                cache: false,
-                success: function(data) {
-                    console.log('Success!')
-                    window.location.reload()
-                }
-                });
-            });
-        });
+        //  $(function() {
+        //        $('#upload-file-btn').click(function() {
+        //
+        //            var form_data = new FormData($('#upload-file')[0]);
+        //            $.ajax({
+        //                type: 'POST',
+        //                url: '/uploadajax',
+        //                data: form_data,
+        //                contentType: false,
+        //                cache: false,
+        //                processData: false,
+        //                async: false,
+        //                success: function(response) {
+        //                    var data = response['data'];
+        //                    // var obj = JSON.parse(data);
+        //                    // var timestamp = obj.Timestamp;
+        //
+        //                    // window.location.reload()
+        //                    console.log(data['timestamp']);
+        //
+        //                },
+        //            });
+        //        });
+        // });
 
     </script>
 </head>
@@ -397,10 +402,10 @@
                         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
 <!--                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i-->
 <!--                                class="fas fa-download fa-sm text-white-50"></i> Upload</a>-->
-                        <form action="" id="upload-file" method="post" enctype="multipart/form-data">
+                        <form id="upload-file" role="form" action="sendQuestions" method="post" enctype="multipart/form-data">
                             <label class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm btn-file">
-                                <i class="fas fa-download fa-sm text-white-50"></i>  Select <input type="file" name="file1" style="display: none;">
-                                <input type="submit" class="btn btn-sm btn-primary shadow-sm btn-file" id="uploadsubmit"/>
+                                <i class="fas fa-download fa-sm text-white-50"></i>  Select <input type="file" name="file" style="display: none;">
+                                <input id="upload-file-btn" type="button" class="btn btn-sm btn-primary shadow-sm btn-file" data-dismiss="modal" value="Upload"/>
                             </label>
                         </form>
                     </div>
@@ -415,8 +420,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Log Count</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                                총 로그수</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="logCount">40,000</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -433,8 +438,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                보안 위협</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                                                접속 HOST 수</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">1000</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -480,7 +485,7 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Pending Requests</div>
+                                                HTTP 오류</div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
                                         </div>
                                         <div class="col-auto">
@@ -502,7 +507,7 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">시간별 집계</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -533,7 +538,7 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Top5 Path</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -554,16 +559,16 @@
                                     <div class="chart-pie pt-4 pb-2">
                                         <canvas id="myPieChart"></canvas>
                                     </div>
-                                    <div class="mt-4 text-center small">
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-primary"></i> Direct
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-success"></i> Social
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-info"></i> Referral
-                                        </span>
+                                    <div class="mt-4 text-center small" id="pieTag">
+<!--                                        <span class="mr-2">-->
+<!--                                            <i class="fas fa-circle text-primary"></i> Direct-->
+<!--                                        </span>-->
+<!--                                        <span class="mr-2">-->
+<!--                                            <i class="fas fa-circle text-success"></i> Social-->
+<!--                                        </span>-->
+<!--                                        <span class="mr-2">-->
+<!--                                            <i class="fas fa-circle text-info"></i> Referral-->
+<!--                                        </span>-->
                                     </div>
                                 </div>
                             </div>
@@ -784,8 +789,8 @@
     <script src="../static/vendor/chart.js/Chart.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="../static/js/demo/chart-area-demo.js"></script>
-    <script src="../static/js/demo/chart-pie-demo.js"></script>
+    <script src="../static/js/demo/chart-area-demo.js?ver=20201123-6"></script>
+    <script src="../static/js/demo/chart-pie-demo.js?ver=20201123-4"></script>
 
 </body>
 
