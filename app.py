@@ -75,7 +75,12 @@ def upload():
         #     'host': host
         # }
 
-        return jsonify({'result': 'success','count': len(df), 'data': process_hour(df), 'data2': process_pie(df)})
+        return jsonify({'result': 'success',
+                        'logCount': len(df),
+                        'hostCount': len(df.Host.unique()),
+                        'faultCount': 20,
+                        'data': process_hour(df),
+                        'data2': process_pie(df)})
     else:
         return jsonify({'result': 'false'})
 

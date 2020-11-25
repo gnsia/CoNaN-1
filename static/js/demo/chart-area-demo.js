@@ -41,7 +41,9 @@ $(function() {
              success: function(response) {
                  alert('!')
 
-                 document.getElementById("logCount").innerText = response['count'];
+                 document.getElementById("logCount").innerText = response['logCount'];
+                 document.getElementById("hostCount").innerText = response['hostCount'];
+                 document.getElementById("faultCount").innerText = response['faultCount'];
 
 
                  var data = response['data'];
@@ -80,8 +82,8 @@ $(function() {
                  var newlabel2 = data2['labels'];
                  var newDataset2 = {
                   data: data2['per'],
-                  backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'],
-                  hoverBackgroundColor: ['#858796', '#36b9cc', '#e74a3b', '#1cc88a', '#4e73df'],
+                  backgroundColor: ['#4e73df', '#1cc88a', '#e74a3b', '#36b9cc', '#858796'],
+                  hoverBackgroundColor: ['#4e73df', '#1cc88a', '#e74a3b', '#36b9cc', '#858796'],
                   hoverBorderColor: "rgba(234, 236, 244, 1)",
                 }
 
